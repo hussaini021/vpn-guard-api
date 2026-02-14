@@ -9,5 +9,5 @@ def home():
 
 @app.route("/analyze")
 def analyze():
-    result = Vpn2.run_analysis()
-    return jsonify({"result": result})
+    result = vpn2.run_analysis()
+    return jsonify(result)
