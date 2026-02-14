@@ -5,10 +5,7 @@ app = Flask(__name__)
 
 @app.route("/")
 def home():
-    return jsonify({
-        "name": "VPN Guard Pro",
-        "status": "API Running"
-    })
+    return jsonify({"status": "API Running"})
 
 @app.route("/analyze")
 def analyze():
