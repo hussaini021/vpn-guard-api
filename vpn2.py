@@ -226,7 +226,11 @@ def print_report(data: Dict):
         print(RED + BOLD + "Overall Status: HIGH RISK 🔴" + RESET)
 
     input("\nPress Enter to continue...")
-
+def run_analysis():
+    return {
+        "vpn": "NOT DETECTED",
+        "risk": "LOW"
+    }
 # ==========================================
 # ENTRY POINT
 # ==========================================
@@ -250,4 +254,5 @@ def main():
             time.sleep(1)
 
 if __name__ == "__main__":
+
     main()
