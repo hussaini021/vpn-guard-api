@@ -5,37 +5,47 @@ PROJECT_INFO = {
     "name": "VPN Guard Pro",
     "version": "1.0.0",
     "author": "Hussaini Murtaza",
-    "role": "Cybersecurity & Python Developer",
-    "github": "https://github.com/hussaini021",
     "engine": "Protected"
 }
 
-LOGO = r"""
-██╗   ██╗██████╗ ███╗   ██╗
-██║   ██║██╔══██╗████╗  ██║
-██║   ██║██████╔╝██╔██╗ ██║
-╚██╗ ██╔╝██╔═══╝ ██║╚██╗██║
- ╚████╔╝ ██║     ██║ ╚████║
-  ╚═══╝  ╚═╝     ╚═╝  ╚═══╝
-VPN Guard Pro
-"""
-
-IP_API = "https://api.ipify.org"
-IP_INFO_API = "http://ip-api.com/json/"
-IPV6_API = "https://api64.ipify.org"
-HEADER_TEST_URL = "https://httpbin.org/headers"
-HTTPS_TEST_URL = "https://example.com"
+LOGO = "VPN Guard Pro"
 
 session = requests.Session()
+session.headers.update({"User-Agent": "VPN-Guard/1.0"})
 
-def get_public_ip():
-    ip = session.get(IP_API, timeout=5).text.strip()
-    info = session.get(f"{IP_INFO_API}{ip}", timeout=5).json()
-    return ip, info.get("country"), info.get("isp")
-
-def ipv6_check():
+def safe_get(url, timeout=3):
     try:
-        r = session.get(IPV6_API, timeout=5)
+        return session.get(url, timeout=timeout)
+    except:
+        return None
+
+def run_analysis():
+    result = {
+        "project": PROJECT_INFO,
+        "logo": LOGO,
+        "analysis": {}
+    }
+
+    # IP
+    r = safe_get("https://api.ipify.org")
+    if not r:
+        result["analysis"]["error"] = "IP service unavailable"
+        return result
+
+    ip = r.text.strip()
+    result["analysis"]["ip"] = ip
+
+    # HTTPS test
+    https_test = safe_get("https://example.com")
+    result["analysis"]["https_ok"] = bool(https_test)
+
+    # VPN risk (simple + safe)
+    risk = 100
+    if not https_test:
+        risk -= 20
+
+    result["analysis"]["risk_score"] = risk
+    return result        r = session.get(IPV6_API, timeout=5)
         return ":" in r.text
     except:
         return False
